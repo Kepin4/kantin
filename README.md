@@ -1,69 +1,148 @@
-# CodeIgniter 4 Application Starter
+# Project Kantin UPB
 
-## What is CodeIgniter?
+Project aplikasi kantin berbasis web yang dibangun menggunakan **CodeIgniter 4** sebagai framework PHP utama dan **Bootstrap 5** untuk frontend.
 
-CodeIgniter is a PHP full-stack web framework that is light, fast, flexible and secure.
-More information can be found at the [official site](https://codeigniter.com).
+## Tentang Project
 
-This repository holds a composer-installable app starter.
-It has been built from the
-[development repository](https://github.com/codeigniter4/CodeIgniter4).
+Project ini adalah sistem manajemen kantin yang mencakup fitur-fitur seperti:
+- Manajemen user (Admin, Mahasiswa, Penjual)
+- Manajemen produk
+- Transaksi pembelian
+- Laporan penjualan
 
-More information about the plans for version 4 can be found in [CodeIgniter 4](https://forum.codeigniter.com/forumdisplay.php?fid=28) on the forums.
+## Tech Stack
 
-You can read the [user guide](https://codeigniter.com/user_guide/)
-corresponding to the latest version of the framework.
+- **Backend**: CodeIgniter 4 (PHP Framework)
+- **Frontend**: Bootstrap 5
+- **Database**: MySQL
+- **Session Management**: CodeIgniter 4 Built-in Session
 
-## Installation & updates
+## Persyaratan Sistem
 
-`composer create-project codeigniter4/appstarter` then `composer update` whenever
-there is a new release of the framework.
+- PHP version 8.2 atau higher
+- Composer
+- MySQL Database
+- Extensions: intl, mbstring, json, mysqlnd, libcurl
 
-When updating, check the release notes to see if there are any changes you might need to apply
-to your `app` folder. The affected files can be copied or merged from
-`vendor/codeigniter4/framework/app`.
+## Git Workflow
 
-## Setup
+Sebelum memulai pengerjaan, ikuti langkah-langkah berikut:
 
-Copy `env` to `.env` and tailor for your app, specifically the baseURL
-and any database settings.
+```bash
+# 1. Pull dari branch master
+git pull origin master
 
-## Important Change with index.php
+# 2. Buat branch baru dengan nama mahasiswa
+git checkout -b <nama_mahasiswa>
 
-`index.php` is no longer in the root of the project! It has been moved inside the *public* folder,
-for better security and separation of components.
+# 3. Kerjakan fitur, lalu commit
+git add .
+git commit -m "<deskripsi fitur yang dikerjakan>"
 
-This means that you should configure your web server to "point" to your project's *public* folder, and
-not to the project root. A better practice would be to configure a virtual host to point there. A poor practice would be to point your web server to the project root and expect to enter *public/...*, as the rest of your logic and the
-framework are exposed.
+# 4. Pull lagi dari master sebelum push (untuk sinkronisasi terbaru)
+git pull origin master
 
-**Please** read the user guide for a better explanation of how CI4 works!
+# 5. Jika ada masalah rebase conflict, gunakan --no-rebase
+git pull origin master --no-rebase
 
-## Repository Management
+# 6. Push branch ke remote
+git push origin <nama_mahasiswa>
+```
 
-We use GitHub issues, in our main repository, to track **BUGS** and to track approved **DEVELOPMENT** work packages.
-We use our [forum](http://forum.codeigniter.com) to provide SUPPORT and to discuss
-FEATURE REQUESTS.
+### Contoh Workflow
+```bash
+git checkout -b john_doe
+# Setelah mengerjakan fitur login
+git add .
+git commit -m "fitur: implementasi login user dengan session"
 
-This repository is a "distribution" one, built by our release preparation script.
-Problems with it can be raised on our forum, or as issues in the main repository.
+# Sebelum push, pull lagi dari master
+git pull origin master
 
-## Server Requirements
+# Jika ada conflict rebase, gunakan --no-rebase
+git pull origin master --no-rebase
 
-PHP version 8.2 or higher is required, with the following extensions installed:
+# Push branch ke remote
+git push origin john_doe
+```
 
-- [intl](http://php.net/manual/en/intl.requirements.php)
-- [mbstring](http://php.net/manual/en/mbstring.installation.php)
+### Catatan Penting
+- Selalu pull dari master sebelum push untuk menghindari conflict
+- Jika mengalami masalah rebase, gunakan flag `--no-rebase` untuk bypass rebase otomatis
 
-> [!WARNING]
-> - The end of life date for PHP 7.4 was November 28, 2022.
-> - The end of life date for PHP 8.0 was November 26, 2023.
-> - The end of life date for PHP 8.1 was December 31, 2025.
-> - If you are still using below PHP 8.2, you should upgrade immediately.
-> - The end of life date for PHP 8.2 will be December 31, 2026.
+## Frontend Setup
 
-Additionally, make sure that the following extensions are enabled in your PHP:
+### Bootstrap Framework
+Project ini menggunakan **Bootstrap 5** sebagai framework CSS utama. Tidak perlu instalasi tambahan karena Bootstrap sudah di-load melalui CDN.
 
-- json (enabled by default - don't turn it off)
-- [mysqlnd](http://php.net/manual/en/mysqlnd.install.php) if you plan to use MySQL
-- [libcurl](http://php.net/manual/en/curl.requirements.php) if you plan to use the HTTP\CURLRequest library
+### Session Management
+Project ini menggunakan **CodeIgniter 4 Built-in Session** untuk manajemen session.
+
+**Contoh Penggunaan Session:**
+```php
+// Set session
+$session = session();
+$session->set('username', 'Admin');
+$session->set('isLoggedIn', true);
+
+// Get session
+$username = $session->get('username');
+$isLoggedIn = $session->get('isLoggedIn');
+
+// Remove session
+$session->remove('username');
+
+// Destroy all session
+$session->destroy();
+
+// Flash message (untuk notifikasi one-time)
+$session->setFlashdata('success', 'Data berhasil disimpan');
+```
+
+**Contoh di View (menampilkan flash message):**
+```php
+<?php if (session()->getFlashdata('success')): ?>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <?= session()->getFlashdata('success') ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+<?php endif; ?>
+```
+
+## Helper Functions
+
+**PENTING:** Selalu baca file `app/Helpers/Func_helper.php` sebelum memulai pengerjaan. File ini berisi fungsi-fungsi bantu yang tersedia, termasuk fungsi logging yang akan dibuat oleh 'Opini'.
+
+Fungsi-fungsi ini dapat mempermudah development dan menjaga konsistensi kode dalam project.
+
+### Penggunaan Helper
+Untuk menggunakan fungsi helper, cukup panggil fungsi tersebut langsung di controller atau view:
+```php
+// Contoh penggunaan helper
+$harga = 50000;
+echo formatRupiah($harga); // Output: Rp 50.000
+```
+
+## Dokumentasi Perintah Umum
+
+### Migration
+```bash
+php spark migrate
+php spark migrate:rollback
+```
+
+### Seeder
+```bash
+php spark db:seed UserSeeder
+```
+
+### Generate Code
+```bash
+php spark make:model ModelName
+php spark make:controller ControllerName
+php spark make:migration MigrationName
+```
+
+## Setup Project
+
+Untuk instruksi setup lengkap, silakan lihat file [SETUP.md](SETUP.md)
